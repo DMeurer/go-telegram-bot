@@ -1,5 +1,3 @@
-cd ../
-
 echo "$(date --utc): Checking for updates..."
 git fetch
 
