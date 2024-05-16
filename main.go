@@ -47,6 +47,7 @@ func main() {
 	dispatcher.AddHandler(handlers.NewCommand("start", start))
 	dispatcher.AddHandler(handlers.NewCommand("ping", ping))
 	dispatcher.AddHandler(handlers.NewCommand("uptime", uptime))
+	dispatcher.AddHandler(handlers.NewCommand("dev_debug", devDebug))
 
 	// Add echo handler to reply to all text messages.
 	dispatcher.AddHandler(handlers.NewMessage(message.Text, echo))
@@ -107,6 +108,19 @@ func uptime(b *gotgbot.Bot, ctx *ext.Context) error {
 		log.Fatal(err)
 	}
 	_, err = ctx.EffectiveMessage.Reply(b, string(out), nil)
+	if err != nil {
+		return fmt.Errorf("failed to send message: %w", err)
+	}
+	return nil
+}
+
+func devDebug(b *gotgbot.Bot, ctx *ext.Context) error {
+	// get uptime of the bot by executing uptime command
+	messageToSend := ""
+	for _, arg := range ctx.Args() {
+		messageToSend += arg + " "
+	}
+	_, err := ctx.EffectiveMessage.Reply(b, messageToSend, nil)
 	if err != nil {
 		return fmt.Errorf("failed to send message: %w", err)
 	}
