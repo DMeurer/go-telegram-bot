@@ -1,5 +1,4 @@
-# pull the latest changes from the repository
-git pull --force
+cd ../
 
 # rebuilding the docker compose, with zero downtime
 docker compose up -d --no-deps --build
