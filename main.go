@@ -88,7 +88,7 @@ func start(b *gotgbot.Bot, ctx *ext.Context) error {
 
 func ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	// get ping of the bot by pinging 8.8.8.8
-	out, err := exec.Command("ping", "8.8.8.8", "-w 10").Output()
+	out, err := exec.Command("sh", "./shell-scripts/ping.sh").Output()
 	if err != nil {
 		log.Fatal(err)
 	}
