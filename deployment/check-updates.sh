@@ -14,11 +14,11 @@ elif [ $LOCAL = $BASE ]; then
   echo "$(date --utc): Changes detected. Pulling changes and rebuilding..."
     echo "Changes detected. Pulling changes and rebuilding..."
     git pull
-    ./deployment/deploy.sh
+    ./deploy.sh
 elif [ $REMOTE = $BASE ]; then
   echo "$(date --utc): Local changes detected. Stashing and rebuilding..."
   git stash
-  ./deployment/deploy.sh
+  ./deploy.sh
 else
     echo "$(date --utc): Diverged branches detected. Exiting..."
 fi
