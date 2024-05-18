@@ -7,16 +7,15 @@ REMOTE=$(git rev-parse "$UPSTREAM")
 BASE=$(git merge-base @ "$UPSTREAM")
 
 if [ $LOCAL = $REMOTE ]; then
-    echo "$(date --utc): No changes detected. Exiting..."
+  echo "$(date --utc): No changes detected. Exiting..."
 elif [ $LOCAL = $BASE ]; then
   echo "$(date --utc): Changes detected. Pulling changes and rebuilding..."
-    echo "Changes detected. Pulling changes and rebuilding..."
-    git pull
-    ./deployment/deploy.sh
+  git pull
+  sudo ./deployment/deploy.sh
 elif [ $REMOTE = $BASE ]; then
   echo "$(date --utc): Local changes detected. Stashing and rebuilding..."
   git stash
-  ./deployment/deploy.sh
+  sudo ./deployment/deploy.sh
 else
     echo "$(date --utc): Diverged branches detected. Exiting..."
 fi
