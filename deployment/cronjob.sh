@@ -6,6 +6,6 @@ echo "$(date --utc): Starting Cron job..." >> "deployment/logs/cronjob.log" 2>&1
 
 mkdir -p deployment/logs
 
-LOCK_FILE="$(pwd)/deployment/cronjob.lock"
+LOCK_FILE="/tmp/go-telegram-bot.lockfile"
 
-flock -n "$LOCK_FILE" "deployment/check-updates.sh" >> "deployment/logs/cronjob.log" 2>&1
+flock -n "$LOCK_FILE" deployment/check-updates.sh >> deployment/logs/cronjob.log 2>&1
