@@ -47,7 +47,7 @@ func main() {
 	dispatcher.AddHandler(handlers.NewCommand("start", start))
 	dispatcher.AddHandler(handlers.NewCommand("ping", ping))
 	dispatcher.AddHandler(handlers.NewCommand("uptime", uptime))
-	dispatcher.AddHandler(handlers.NewCommand("dev_debug", devDebug))
+	dispatcher.AddHandler(handlers.NewCommand("dev", devDebug))
 
 	// Add echo handler to reply to all text messages.
 	dispatcher.AddHandler(handlers.NewMessage(message.Text, echo))
