@@ -2,16 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/message"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
-	"os/exec"
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
+	// Telegram API
+	"github.com/joho/godotenv"
 )
 
 // This bot is as basic as it gets - it simply repeats everything you say.
@@ -43,15 +42,18 @@ func main() {
 	})
 	updater := ext.NewUpdater(dispatcher, nil)
 
-	// Add handlers for commands
+	// Default
 	dispatcher.AddHandler(handlers.NewCommand("start", start))
+
+	// Actual commands
+	dispatcher.AddHandler(handlers.NewCommand("echo", echo))
+	dispatcher.AddHandler(handlers.NewCommand("ip-address", apiIpLookup))
+
+	// Debugging and utility commands
 	dispatcher.AddHandler(handlers.NewCommand("ping", ping))
 	dispatcher.AddHandler(handlers.NewCommand("uptime", uptime))
 	dispatcher.AddHandler(handlers.NewCommand("dev", devDebug))
 	dispatcher.AddHandler(handlers.NewCommand("version", version))
-
-	// Add echo handler to reply to all text messages.
-	dispatcher.AddHandler(handlers.NewMessage(message.Text, echo))
 
 	// Start receiving updates.
 	err = updater.StartPolling(b, &ext.PollingOpts{
@@ -72,65 +74,9 @@ func main() {
 	updater.Idle()
 }
 
-// echo replies to a messages with its own contents.
-func echo(b *gotgbot.Bot, ctx *ext.Context) error {
-	_, err := ctx.EffectiveMessage.Reply(b, ctx.EffectiveMessage.Text, nil)
-	if err != nil {
-		return fmt.Errorf("failed to echo message: %w", err)
-	}
-	return nil
-}
-
-func start(b *gotgbot.Bot, ctx *ext.Context) error {
-	_, err := ctx.EffectiveMessage.Reply(b, "Hello, I am a bot. I am here to help you.\nIf i decided to switch the repo to public, the code can be found here:\nhttps://github.com/DMeurer/go-telegram-bot", nil)
-	if err != nil {
-		return fmt.Errorf("failed to echo message: %w", err)
-	}
-	return nil
-}
-
-func ping(b *gotgbot.Bot, ctx *ext.Context) error {
-	// get ping of the bot by pinging 8.8.8.8
-	out, err := exec.Command("sh", "./shell-scripts/ping.sh").Output()
-	if err != nil {
-		log.Fatal(err)
-	}
-	_, err = ctx.EffectiveMessage.Reply(b, string(out), nil)
-	if err != nil {
-		return fmt.Errorf("failed to send message: %w", err)
-	}
-	return nil
-}
-
-func uptime(b *gotgbot.Bot, ctx *ext.Context) error {
-	// get uptime of the bot by executing uptime command
-	out, err := exec.Command("sh", "./shell-scripts/uptime.sh").Output()
-	if err != nil {
-		log.Fatal(err)
-	}
-	_, err = ctx.EffectiveMessage.Reply(b, string(out), nil)
-	if err != nil {
-		return fmt.Errorf("failed to send message: %w", err)
-	}
-	return nil
-}
-
-func devDebug(b *gotgbot.Bot, ctx *ext.Context) error {
-	// get uptime of the bot by executing uptime command
-	messageToSend := ""
-	for _, arg := range ctx.Args() {
-		messageToSend += arg + " "
-	}
-	_, err := ctx.EffectiveMessage.Reply(b, messageToSend, nil)
-	if err != nil {
-		return fmt.Errorf("failed to send message: %w", err)
-	}
-	return nil
-}
-
 func version(b *gotgbot.Bot, ctx *ext.Context) error {
 	// TODO: Change for every commit
-	_, err := ctx.EffectiveMessage.Reply(b, "Currently on Version v1.0.0", nil)
+	_, err := ctx.EffectiveMessage.Reply(b, "Currently on Version v1.0.0-dev1", nil)
 	if err != nil {
 		return fmt.Errorf("failed to send message: %w", err)
 	}
