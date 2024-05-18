@@ -1,4 +1,4 @@
-cd ../
+cd /home/raspi/go-telegram-bot || exit
 
 mkdir -p deployment/logs
 
