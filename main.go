@@ -48,6 +48,7 @@ func main() {
 	dispatcher.AddHandler(handlers.NewCommand("ping", ping))
 	dispatcher.AddHandler(handlers.NewCommand("uptime", uptime))
 	dispatcher.AddHandler(handlers.NewCommand("dev", devDebug))
+	dispatcher.AddHandler(handlers.NewCommand("version", version))
 
 	// Add echo handler to reply to all text messages.
 	dispatcher.AddHandler(handlers.NewMessage(message.Text, echo))
@@ -121,6 +122,15 @@ func devDebug(b *gotgbot.Bot, ctx *ext.Context) error {
 		messageToSend += arg + " "
 	}
 	_, err := ctx.EffectiveMessage.Reply(b, messageToSend, nil)
+	if err != nil {
+		return fmt.Errorf("failed to send message: %w", err)
+	}
+	return nil
+}
+
+func version(b *gotgbot.Bot, ctx *ext.Context) error {
+	// TODO: Change for every commit
+	_, err := ctx.EffectiveMessage.Reply(b, "Currently on Version v1.0.0", nil)
 	if err != nil {
 		return fmt.Errorf("failed to send message: %w", err)
 	}
