@@ -20,9 +20,24 @@ func main() {
 	if err != nil {
 		panic("Error loading env file.")
 	}
-	token := os.Getenv("TELEGRAM_APITOKEN")
-	if token == "" {
-		panic("TOKEN environment variable is empty")
+
+	// determine stage
+	stage := os.Getenv("STAGE")
+	token := ""
+	if stage == "" {
+		panic("STAGE environment variable is empty")
+	} else if stage == "dev" {
+		token = os.Getenv("TELEGRAM_APITOKEN_DEV")
+		if token == "" {
+			panic("TELEGRAM_APITOKEN_DEV environment variable is empty")
+		}
+	} else if stage == "prod" {
+		token = os.Getenv("TELEGRAM_APITOKEN")
+		if token == "" {
+			panic("TELEGRAM_APITOKEN environment variable is empty")
+		}
+	} else {
+		panic("STAGE environment variable is not set to dev or prod")
 	}
 
 	// Create bot from environment value.
