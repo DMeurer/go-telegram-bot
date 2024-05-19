@@ -67,15 +67,27 @@ func devDebug(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func apiIpLookup(b *gotgbot.Bot, ctx *ext.Context) error {
-	url := "https://ipapi.co/" + ctx.EffectiveMessage.Text + "/json/"
+	// build the url (ctx.Args()[1] is the ip address)
+	url := "https://ipapi.co/" + ctx.Args()[1] + "/json/"
 	method := "GET"
 
+	log.Printf("Requesting %s", url)
+
+	// create a new http client
 	client := &http.Client{}
+
+	// build the request with the url and method
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// add headers
+	req.Header.Add("Accept", "*/*")
+	req.Header.Add("User-Agent", "gotgbot")
+	req.Header.Add("Connection", "keep-alive")
+
+	// send the request
 	res, err := client.Do(req)
 	if err != nil {
 		log.Fatal(err)
@@ -87,11 +99,13 @@ func apiIpLookup(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}(res.Body)
 
+	// read the response body
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// send the response body to the chat as a reply
 	_, err = ctx.EffectiveMessage.Reply(b, string(body), nil)
 	if err != nil {
 		return fmt.Errorf("failed to send message: %w", err)
