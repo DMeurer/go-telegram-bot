@@ -91,7 +91,7 @@ func main() {
 
 func version(b *gotgbot.Bot, ctx *ext.Context) error {
 	// TODO: Change for every commit
-	_, err := ctx.EffectiveMessage.Reply(b, "Currently on Version v1.0.0-dev1", nil)
+	_, err := ctx.EffectiveMessage.Reply(b, "Currently on Version v1.0.1", nil)
 	if err != nil {
 		return fmt.Errorf("failed to send message: %w", err)
 	}
