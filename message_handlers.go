@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"os/exec"
+	"strconv"
 )
 
 // echo replies to a messages with its own contents.
@@ -80,7 +81,7 @@ type ipLookupApiResponse struct {
 	Country_Capital      string
 	Country_Tld          string
 	Continent_Code       string
-	In_Eu                string
+	In_Eu                bool
 	Postal               string
 	Latitude             json.Number
 	Longitude            json.Number
@@ -177,7 +178,7 @@ func apiIpLookup(b *gotgbot.Bot, ctx *ext.Context) error {
 			ipLookupResponse.Country_Capital,
 			ipLookupResponse.Country_Tld,
 			ipLookupResponse.Continent_Code,
-			ipLookupResponse.In_Eu,
+			strconv.FormatBool(ipLookupResponse.In_Eu),
 			ipLookupResponse.Postal,
 			ipLookupResponse.Latitude,
 			ipLookupResponse.Longitude,
