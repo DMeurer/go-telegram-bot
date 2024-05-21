@@ -68,33 +68,33 @@ func devDebug(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 type ipLookupApiResponse struct {
-	Ip                   string
-	Network              string
-	Version              string
-	City                 string
-	Region               string
-	RegionCode           string
-	Country              string
-	Country_Name         string
-	Country_Code         string
-	Country_Code_Iso3    string
-	Country_Capital      string
-	Country_Tld          string
-	Continent_Code       string
-	In_Eu                bool
-	Postal               string
-	Latitude             json.Number
-	Longitude            json.Number
-	Timezone             string
-	Utc_Offset           string
-	Country_Calling_Code string
-	Currency             string
-	Currency_Name        string
-	Languages            string
-	Country_Area         string
-	Country_Population   string
-	Asn                  string
-	Org                  string
+	Ip                 string  `json:"ip"`
+	Network            string  `json:"network"`
+	Version            string  `json:"version"`
+	City               string  `json:"city"`
+	Region             string  `json:"region"`
+	RegionCode         string  `json:"region_code"`
+	Country            string  `json:"country"`
+	CountryName        string  `json:"country_name"`
+	CountryCode        string  `json:"country_code"`
+	CountryCodeIso3    string  `json:"country_code_iso3"`
+	CountryCapital     string  `json:"country_capital"`
+	CountryTld         string  `json:"country_tld"`
+	ContinentCode      string  `json:"continent_code"`
+	InEu               bool    `json:"in_eu"`
+	Postal             string  `json:"postal"`
+	Latitude           float64 `json:"latitude"`
+	Longitude          float64 `json:"longitude"`
+	Timezone           string  `json:"timezone"`
+	UtcOffset          string  `json:"utc_offset"`
+	CountryCallingCode string  `json:"country_calling_code"`
+	Currency           string  `json:"currency"`
+	CurrencyName       string  `json:"currency_name"`
+	Languages          string  `json:"languages"`
+	CountryArea        float64 `json:"country_area"`
+	CountryPopulation  int     `json:"country_population"`
+	Asn                string  `json:"asn"`
+	Org                string  `json:"org"`
 }
 
 func apiIpLookup(b *gotgbot.Bot, ctx *ext.Context) error {
@@ -172,24 +172,24 @@ func apiIpLookup(b *gotgbot.Bot, ctx *ext.Context) error {
 			ipLookupResponse.Region,
 			ipLookupResponse.RegionCode,
 			ipLookupResponse.Country,
-			ipLookupResponse.Country_Name,
-			ipLookupResponse.Country_Code,
-			ipLookupResponse.Country_Code_Iso3,
-			ipLookupResponse.Country_Capital,
-			ipLookupResponse.Country_Tld,
-			ipLookupResponse.Continent_Code,
-			strconv.FormatBool(ipLookupResponse.In_Eu),
+			ipLookupResponse.CountryName,
+			ipLookupResponse.CountryCode,
+			ipLookupResponse.CountryCodeIso3,
+			ipLookupResponse.CountryCapital,
+			ipLookupResponse.CountryTld,
+			ipLookupResponse.ContinentCode,
+			strconv.FormatBool(ipLookupResponse.InEu),
 			ipLookupResponse.Postal,
 			ipLookupResponse.Latitude,
 			ipLookupResponse.Longitude,
 			ipLookupResponse.Timezone,
-			ipLookupResponse.Utc_Offset,
-			ipLookupResponse.Country_Calling_Code,
+			ipLookupResponse.UtcOffset,
+			ipLookupResponse.CountryCallingCode,
 			ipLookupResponse.Currency,
-			ipLookupResponse.Currency_Name,
+			ipLookupResponse.CurrencyName,
 			ipLookupResponse.Languages,
-			ipLookupResponse.Country_Area,
-			ipLookupResponse.Country_Population,
+			ipLookupResponse.CountryArea,
+			ipLookupResponse.CountryPopulation,
 			ipLookupResponse.Asn,
 			ipLookupResponse.Org,
 		)
