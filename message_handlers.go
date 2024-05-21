@@ -67,33 +67,33 @@ func devDebug(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 type ipLookupApiResponse struct {
-	Ip                 string
-	Network            string
-	Version            string
-	City               string
-	Region             string
-	RegionCode         string
-	Country            string
-	CountryName        string
-	CountryCode        string
-	CountryCodeIso3    string
-	CountryCapital     string
-	CountryTld         string
-	ContinentCode      string
-	InEu               string
-	Postal             string
-	Latitude           json.Number
-	Longitude          json.Number
-	Timezone           string
-	UtcOffset          string
-	CountryCallingCode string
-	Currency           string
-	CurrencyName       string
-	Languages          string
-	CountryArea        string
-	CountryPopulation  string
-	Asn                string
-	Org                string
+	Ip                   string
+	Network              string
+	Version              string
+	City                 string
+	Region               string
+	RegionCode           string
+	Country              string
+	Country_Name         string
+	Country_Code         string
+	Country_Code_Iso3    string
+	Country_Capital      string
+	Country_Tld          string
+	Continent_Code       string
+	In_Eu                string
+	Postal               string
+	Latitude             json.Number
+	Longitude            json.Number
+	Timezone             string
+	Utc_Offset           string
+	Country_Calling_Code string
+	Currency             string
+	Currency_Name        string
+	Languages            string
+	Country_Area         string
+	Country_Population   string
+	Asn                  string
+	Org                  string
 }
 
 func apiIpLookup(b *gotgbot.Bot, ctx *ext.Context) error {
@@ -171,24 +171,24 @@ func apiIpLookup(b *gotgbot.Bot, ctx *ext.Context) error {
 			ipLookupResponse.Region,
 			ipLookupResponse.RegionCode,
 			ipLookupResponse.Country,
-			ipLookupResponse.CountryName,
-			ipLookupResponse.CountryCode,
-			ipLookupResponse.CountryCodeIso3,
-			ipLookupResponse.CountryCapital,
-			ipLookupResponse.CountryTld,
-			ipLookupResponse.ContinentCode,
-			ipLookupResponse.InEu,
+			ipLookupResponse.Country_Name,
+			ipLookupResponse.Country_Code,
+			ipLookupResponse.Country_Code_Iso3,
+			ipLookupResponse.Country_Capital,
+			ipLookupResponse.Country_Tld,
+			ipLookupResponse.Continent_Code,
+			ipLookupResponse.In_Eu,
 			ipLookupResponse.Postal,
 			ipLookupResponse.Latitude,
 			ipLookupResponse.Longitude,
 			ipLookupResponse.Timezone,
-			ipLookupResponse.UtcOffset,
-			ipLookupResponse.CountryCallingCode,
+			ipLookupResponse.Utc_Offset,
+			ipLookupResponse.Country_Calling_Code,
 			ipLookupResponse.Currency,
-			ipLookupResponse.CurrencyName,
+			ipLookupResponse.Currency_Name,
 			ipLookupResponse.Languages,
-			ipLookupResponse.CountryArea,
-			ipLookupResponse.CountryPopulation,
+			ipLookupResponse.Country_Area,
+			ipLookupResponse.Country_Population,
 			ipLookupResponse.Asn,
 			ipLookupResponse.Org,
 		)
