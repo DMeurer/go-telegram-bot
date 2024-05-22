@@ -172,6 +172,13 @@ func apiIpLookup(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// send the request
 	res, err := requests.SendRequest(method, url, headers)
+	if err != nil {
+		log.Printf("Failed to send request\n %s", err)
+		_, err := ctx.EffectiveMessage.Reply(b, "Failed to send request", nil)
+		if err != nil {
+			panic("failed to send message: " + err.Error())
+		}
+	}
 
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
