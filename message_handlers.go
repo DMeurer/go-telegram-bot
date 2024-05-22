@@ -7,6 +7,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"io"
 	"log"
+	"main/requests"
 	"main/systemInfo"
 	"os/exec"
 	"strconv"
@@ -31,7 +32,7 @@ func start(b *gotgbot.Bot, ctx *ext.Context) error {
 
 func ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	// get ping of the bot by pinging 8.8.8.8
-	out, err := exec.Command("sh", "./shell-scripts/ping.sh").Output()
+	out, err := exec.Command("sh", "./systemInfo/shell-scripts/ping.sh").Output()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -161,7 +162,7 @@ func apiIpLookup(b *gotgbot.Bot, ctx *ext.Context) error {
 	// build the url (ctx.Args()[1] is the ip address)
 	url := "https://ipapi.co/" + ctx.Args()[1] + "/json/"
 	method := "GET"
-	headers := []headerEntry{
+	headers := []requests.HeaderEntry{
 		{"Accept", "*/*"},
 		{"User-Agent", "gotgbot"},
 		{"Connection", "keep-alive"},
@@ -170,7 +171,7 @@ func apiIpLookup(b *gotgbot.Bot, ctx *ext.Context) error {
 	log.Printf("Requesting %s", url)
 
 	// send the request
-	res, err := sendRequest(method, url, headers)
+	res, err := requests.SendRequest(method, url, headers)
 
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
