@@ -7,6 +7,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"io"
 	"log"
+	"main/systemInfo"
 	"os/exec"
 	"strconv"
 )
@@ -42,12 +43,62 @@ func ping(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func uptime(b *gotgbot.Bot, ctx *ext.Context) error {
-	// get uptime of the bot by executing uptime command
-	out, err := exec.Command("sh", "./shell-scripts/uptime.sh").Output()
-	if err != nil {
-		log.Fatal(err)
+	if len(ctx.Args()) > 2 {
+		_, err := ctx.EffectiveMessage.Reply(b, "Too many arguments provided", nil)
+		if err != nil {
+			return fmt.Errorf("failed to send message: %w", err)
+		}
+		return nil
 	}
-	_, err = ctx.EffectiveMessage.Reply(b, string(out), nil)
+
+	if len(ctx.Args()) <= 1 {
+		serverUptime, err := systemInfo.GetUptime("server")
+		if err != nil {
+			log.Fatal(err)
+		}
+		containerUptime, err := systemInfo.GetUptime("container")
+		if err != nil {
+			log.Fatal(err)
+		}
+		_, err = ctx.EffectiveMessage.Reply(b, fmt.Sprintf("Server uptime: %s\n - Keep in mind, the time is sometimes incorrect.\nContainer uptime: %s", systemInfo.FormatDurationHumanReadable(serverUptime), systemInfo.FormatDurationHumanReadable(containerUptime)), nil)
+		if err != nil {
+			return fmt.Errorf("failed to send message: %w", err)
+		}
+		return nil
+	}
+
+	if len(ctx.Args()) == 2 {
+		switch ctx.Args()[1] {
+		case "server":
+			serverUptime, err := systemInfo.GetUptime("server")
+			if err != nil {
+				log.Fatal(err)
+			}
+			_, err = ctx.EffectiveMessage.Reply(b, fmt.Sprintf("Server uptime: %s\n - Keep in mind, the time is sometimes incorrect.", systemInfo.FormatDurationHumanReadable(serverUptime)), nil)
+			if err != nil {
+				return fmt.Errorf("failed to send message: %w", err)
+			}
+			return nil
+		case "container":
+			containerUptime, err := systemInfo.GetUptime("container")
+			if err != nil {
+				log.Fatal(err)
+			}
+			_, err = ctx.EffectiveMessage.Reply(b, fmt.Sprintf("Container uptime: %s", systemInfo.FormatDurationHumanReadable(containerUptime)), nil)
+			if err != nil {
+				return fmt.Errorf("failed to send message: %w", err)
+			}
+			return nil
+		default:
+			_, err := ctx.EffectiveMessage.Reply(b, "Invalid service provided", nil)
+			if err != nil {
+				return fmt.Errorf("failed to send message: %w", err)
+			}
+			return nil
+		}
+	}
+
+	_, err := ctx.EffectiveMessage.Reply(b, "Please provide a service to get the uptime of", nil)
 	if err != nil {
 		return fmt.Errorf("failed to send message: %w", err)
 	}
