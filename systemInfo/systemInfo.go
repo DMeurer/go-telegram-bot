@@ -48,8 +48,6 @@ func GetServerStart() time.Time {
 
 	// Parse time looking like this: 2024-05-22 20:09:01 (the result of the stat command)
 	tt, err := time.Parse("2006-01-02 15:04:05", string(out))
-	fmt.Printf("Server Time: %s\n", tt.Format("2006-01-02 15:04:05"))
-	fmt.Printf("Server Output: %s\n", string(out))
 	return tt
 }
 
@@ -65,8 +63,6 @@ func GetContainerStart() time.Time {
 
 	// Parse time looking like this: 2024-05-22 20:47:25.471086076 +0000 (the result of the docker command)
 	tt, err := time.Parse("2006-01-02 15:04:05.999999999 -0700", string(out))
-	fmt.Printf("Docker Output: %s\n", string(out))
-	fmt.Printf("Docker Time: %s\n", tt.Format("2006-01-02 15:04:05.999999999 -0700"))
 	return tt
 }
 
@@ -76,7 +72,5 @@ func FormatDurationHumanReadable(d time.Duration) string {
 	hours := int(d.Hours()) % 24
 	minutes := int(d.Minutes()) % 60
 	seconds := int(d.Seconds()) % 60
-	res := fmt.Sprintf("%d days, %d hours, %d minutes, %d seconds", days, hours, minutes, seconds)
-	fmt.Printf("Time Values: %d hours, %d minutes, %d seconds\nCalculated Uptime: %s\n", int(d.Hours()), int(d.Minutes()), int(d.Seconds()), res)
-	return res
+	return fmt.Sprintf("%d days, %d hours, %d minutes, %d seconds", days, hours, minutes, seconds)
 }
