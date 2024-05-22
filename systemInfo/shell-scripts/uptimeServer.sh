@@ -1,2 +1,1 @@
 uptime -s
-uptime -p
