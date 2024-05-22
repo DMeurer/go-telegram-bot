@@ -1,15 +1,15 @@
-package main
+package requests
 
 import (
 	"net/http"
 )
 
-type headerEntry struct {
-	key   string
-	value string
+type HeaderEntry struct {
+	ParamKey   string
+	ParamValue string
 }
 
-func sendRequest(method string, url string, headers []headerEntry) (*http.Response, error) {
+func SendRequest(method string, url string, headers []HeaderEntry) (*http.Response, error) {
 	// create a new http client
 	client := &http.Client{}
 
@@ -21,7 +21,7 @@ func sendRequest(method string, url string, headers []headerEntry) (*http.Respon
 
 	// add headers
 	for _, header := range headers {
-		req.Header.Add(header.key, header.value)
+		req.Header.Add(header.ParamKey, header.ParamValue)
 	}
 
 	// send the request
