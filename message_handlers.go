@@ -61,7 +61,7 @@ func uptime(b *gotgbot.Bot, ctx *ext.Context) error {
 		if err != nil {
 			log.Fatal(err)
 		}
-		_, err = ctx.EffectiveMessage.Reply(b, fmt.Sprintf("Server uptime: %s\n - Keep in mind, the time is sometimes incorrect.\nContainer uptime: %s", systemInfo.FormatDurationHumanReadable(serverUptime), systemInfo.FormatDurationHumanReadable(containerUptime)), nil)
+		_, err = ctx.EffectiveMessage.Reply(b, fmt.Sprintf("Server uptime: %s\nContainer uptime: %s", systemInfo.FormatDurationHumanReadable(serverUptime), systemInfo.FormatDurationHumanReadable(containerUptime)), nil)
 		if err != nil {
 			return fmt.Errorf("failed to send message: %w", err)
 		}
@@ -75,7 +75,7 @@ func uptime(b *gotgbot.Bot, ctx *ext.Context) error {
 			if err != nil {
 				log.Fatal(err)
 			}
-			_, err = ctx.EffectiveMessage.Reply(b, fmt.Sprintf("Server uptime: %s\n - Keep in mind, the time is sometimes incorrect.", systemInfo.FormatDurationHumanReadable(serverUptime)), nil)
+			_, err = ctx.EffectiveMessage.Reply(b, fmt.Sprintf("Server uptime: %s", systemInfo.FormatDurationHumanReadable(serverUptime)), nil)
 			if err != nil {
 				return fmt.Errorf("failed to send message: %w", err)
 			}
