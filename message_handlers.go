@@ -9,8 +9,10 @@ import (
 	"log"
 	"main/requests"
 	"main/systemInfo"
+	"main/tools"
 	"os/exec"
 	"strconv"
+	"time"
 )
 
 // echo replies to a messages with its own contents.
@@ -258,6 +260,60 @@ func apiIpLookup(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// send the response body to the chat as a reply
 	_, err = ctx.EffectiveMessage.Reply(b, responseMessage, nil)
+	if err != nil {
+		return fmt.Errorf("failed to send message: %w", err)
+	}
+	return nil
+}
+
+func mensa(b *gotgbot.Bot, ctx *ext.Context) error {
+
+	days := []string{}
+
+	if len(ctx.Args()) == 1 {
+		days = append(days, time.Wednesday.String())
+	} else {
+
+		if tools.StringInSlice("-mon", ctx.Args()) {
+			days = append(days, "Monday")
+		}
+		if tools.StringInSlice("-tue", ctx.Args()) {
+			days = append(days, "Tuesday")
+		}
+		if tools.StringInSlice("-wed", ctx.Args()) {
+			days = append(days, "Wednesday")
+		}
+		if tools.StringInSlice("-thu", ctx.Args()) {
+			days = append(days, "Thursday")
+		}
+		if tools.StringInSlice("-fri", ctx.Args()) {
+			days = append(days, "Friday")
+		}
+		if tools.StringInSlice("-sat", ctx.Args()) {
+			days = append(days, "Saturday")
+		}
+		if tools.StringInSlice("-all", ctx.Args()) {
+			days = append(days, "Monday")
+			days = append(days, "Tuesday")
+			days = append(days, "Wednesday")
+			days = append(days, "Thursday")
+			days = append(days, "Friday")
+			days = append(days, "Saturday")
+		}
+		if tools.StringInSlice("-wee", ctx.Args()) {
+			days = append(days, "Monday")
+			days = append(days, "Tuesday")
+			days = append(days, "Wednesday")
+			days = append(days, "Thursday")
+			days = append(days, "Friday")
+		}
+	}
+
+	// prepare the message
+	message := tools.PrepareMessageForMeals(tools.LoadMeals(), false, days...)
+
+	// send the message
+	_, err := ctx.EffectiveMessage.Reply(b, message, nil)
 	if err != nil {
 		return fmt.Errorf("failed to send message: %w", err)
 	}
