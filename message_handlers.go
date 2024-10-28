@@ -9,11 +9,26 @@ import (
 	"log"
 	"main/requests"
 	"main/systemInfo"
+	"main/tools"
 	"os/exec"
 	"strconv"
+	"time"
 )
 
-// echo replies to a messages with its own contents.
+func help(b *gotgbot.Bot, ctx *ext.Context) error {
+	_, err := ctx.EffectiveMessage.Reply(b, "Available commands:\n"+
+		"/help - Show this message\n"+
+		"/echo - Repeat the message\n"+
+		"/ping - Show Ping of the bot\n"+
+		"/uptime - Get the uptime of the bot and server\n"+
+		"/ip-address - Get information about an IP address\n"+
+		"/mensa - Get the meals of the canteen", nil)
+	if err != nil {
+		return fmt.Errorf("failed to send message: %w", err)
+	}
+	return nil
+}
+
 func echo(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err := ctx.EffectiveMessage.Reply(b, ctx.EffectiveMessage.Text, nil)
 	if err != nil {
@@ -258,6 +273,68 @@ func apiIpLookup(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// send the response body to the chat as a reply
 	_, err = ctx.EffectiveMessage.Reply(b, responseMessage, nil)
+	if err != nil {
+		return fmt.Errorf("failed to send message: %w", err)
+	}
+	return nil
+}
+
+func mensa(b *gotgbot.Bot, ctx *ext.Context) error {
+
+	if tools.StringInSlice("-help", ctx.Args()) || tools.StringInSlice("-h", ctx.Args()) || tools.StringInSlice("--help", ctx.Args()) || tools.StringInSlice("-?", ctx.Args()) {
+		_, err := ctx.EffectiveMessage.Reply(b, "Usage: /mensa [-all] [-mon] [-tue] [-wed] [-thu] [-fri] [-sat] [-wee]\n\nWill show the menu of this weekday\n\n-all: Show all days\n-mon: Show Monday\n-tue: Show Tuesday\n-wed: Show Wednesday\n-thu: Show Thursday\n-fri: Show Friday\n-sat: Show Saturday\n-wee: Show weekdays (Monday - Friday)", nil)
+		if err != nil {
+			return fmt.Errorf("failed to send message: %w", err)
+		}
+		return nil
+	}
+
+	var days []string
+
+	if len(ctx.Args()) == 1 {
+		days = append(days, time.Wednesday.String())
+	} else {
+
+		if tools.StringInSlice("-mon", ctx.Args()) {
+			days = append(days, "Monday")
+		}
+		if tools.StringInSlice("-tue", ctx.Args()) {
+			days = append(days, "Tuesday")
+		}
+		if tools.StringInSlice("-wed", ctx.Args()) {
+			days = append(days, "Wednesday")
+		}
+		if tools.StringInSlice("-thu", ctx.Args()) {
+			days = append(days, "Thursday")
+		}
+		if tools.StringInSlice("-fri", ctx.Args()) {
+			days = append(days, "Friday")
+		}
+		if tools.StringInSlice("-sat", ctx.Args()) {
+			days = append(days, "Saturday")
+		}
+		if tools.StringInSlice("-all", ctx.Args()) {
+			days = append(days, "Monday")
+			days = append(days, "Tuesday")
+			days = append(days, "Wednesday")
+			days = append(days, "Thursday")
+			days = append(days, "Friday")
+			days = append(days, "Saturday")
+		}
+		if tools.StringInSlice("-wee", ctx.Args()) {
+			days = append(days, "Monday")
+			days = append(days, "Tuesday")
+			days = append(days, "Wednesday")
+			days = append(days, "Thursday")
+			days = append(days, "Friday")
+		}
+	}
+
+	// prepare the message
+	message := tools.PrepareMessageForMeals(tools.LoadMeals(), false, days...)
+
+	// send the message
+	_, err := ctx.EffectiveMessage.Reply(b, message, nil)
 	if err != nil {
 		return fmt.Errorf("failed to send message: %w", err)
 	}
