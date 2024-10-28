@@ -15,7 +15,7 @@ type meal struct {
 	PriceGuests    string
 }
 
-type meals struct {
+type Meals struct {
 	Monday    []meal
 	Tuesday   []meal
 	Wednesday []meal
@@ -24,7 +24,7 @@ type meals struct {
 	Saturday  []meal
 }
 
-func PrepareMessageForMeals(meals meals, detailed bool, days ...string) string {
+func PrepareMessageForMeals(meals Meals, detailed bool, days ...string) string {
 	if (days == nil) || (len(days) == 0) {
 		days = []string{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}
 	}
@@ -80,26 +80,28 @@ func StringInSlice(a string, list []string) bool {
 }
 
 func prepareMessageDay(meal meal, detailed bool) string {
-	message := "\t" + meal.Name + "\n"
+	message := "    " + meal.Name + "\n"
 	if detailed {
-		message += "\tAllergene: " + meal.Allergens + "\n"
-		message += "\tZusatzstoffe: " + meal.Additives + "\n"
-		message += "\tPreis Studierende: " + meal.PriceStudents + "\n"
-		message += "\tPreis Beschäftigte: " + meal.PriceEmployees + "\n"
-		message += "\tPreis Gäste: " + meal.PriceGuests + "\n"
+		message += "    Allergene: " + meal.Allergens + "\n"
+		message += "    Zusatzstoffe: " + meal.Additives + "\n"
+		message += "    Preis Studierende: " + meal.PriceStudents + "\n"
+		message += "    Preis Beschäftigte: " + meal.PriceEmployees + "\n"
+		message += "    Preis Gäste: " + meal.PriceGuests + "\n"
 	} else {
-		message += "\tPreis Studierende: " + meal.PriceStudents + "\n"
+		message += "    Preis Studierende: " + meal.PriceStudents + "\n"
 	}
 	message += "\n"
 	return message
 }
 
-func LoadMeals() meals {
+func LoadMeals() Meals {
 
-	allMeals := meals{}
+	allMeals := Meals{}
 
 	c := colly.NewCollector()
 	// Monday
+	// OnHTML is called for each element found with the specified selector
+	// in this case, the selector is a div with the id "tab-mon" and a child div with the class "col-span-1"
 	c.OnHTML("div#tab-mon div.col-span-1", func(e *colly.HTMLElement) {
 		// get text
 		text := cleanText(e.Text)
@@ -139,13 +141,18 @@ func LoadMeals() meals {
 		allMeals.Saturday = append(allMeals.Saturday, myMeal)
 	})
 
-	c.Visit("https://www.swfr.de/essen/mensen-cafes-speiseplaene/mensa-furtwangen")
+	err := c.Visit("https://www.swfr.de/essen/mensen-cafes-speiseplaene/mensa-furtwangen")
+	if err != nil {
+		return Meals{}
+	}
 	return allMeals
 }
 
 func cleanText(text string) string {
+	// remove all newlines and tabs, replace them with spaces
 	text = strings.ReplaceAll(text, "\n", " ")
 	text = strings.ReplaceAll(text, "\t", " ")
+	// replace multiple spaces with one space
 	text = regexp.MustCompile(`\s+`).ReplaceAllString(text, " ")
 	text = strings.TrimSpace(text)
 	return text
@@ -157,8 +164,10 @@ func parseMeal(text string) meal {
 	if len(chunks) == 2 {
 		myMeal.Allergens = chunks[1]
 	} else if len(chunks) == 1 {
+		// triggers if the string "enthält Allergene: " is not found
 		myMeal.Allergens = "Keine"
 	} else {
+		// something went completely wrong - it should not happen
 		myMeal.Allergens = "Error on Allergenes - Hoping for the best"
 	}
 	chunks = strings.Split(chunks[0], "Kennzeichnungen/Zusatzstoffe: ")
@@ -197,6 +206,7 @@ func parseMeal(text string) meal {
 	myMeal.Name = regexp.MustCompile(`Essen \d `).ReplaceAllString(myMeal.Name, " ")
 	myMeal.Name = regexp.MustCompile(`Preise \+ Kennzeichnungen`).ReplaceAllString(myMeal.Name, " ")
 
+	// convert camelCase to "normal case" and remove leading and trailing whitespaces
 	myMeal.Name, _ = camelCaseToNormalCase(strings.TrimSpace(myMeal.Name))
 	myMeal.Allergens, _ = camelCaseToNormalCase(strings.TrimSpace(myMeal.Allergens))
 	myMeal.Additives, _ = camelCaseToNormalCase(strings.TrimSpace(myMeal.Additives))
@@ -208,6 +218,8 @@ func parseMeal(text string) meal {
 }
 
 func camelCaseToNormalCase(inputCamelCaseStr string) (string, int) {
+	// standard regex for this is `[A-Z][^A-Z]*`
+	// I added a second part to also match prices like "2.50 €" that would be lost otherwise
 	re := regexp.MustCompile(`([A-z][^A-Z]*|\d?.?\d+ ?€?)`)
 	parts := re.FindAllString(inputCamelCaseStr, -1)
 	for index := range parts {

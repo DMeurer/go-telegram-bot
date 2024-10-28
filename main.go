@@ -48,7 +48,7 @@ func main() {
 
 	// Create updater and dispatcher.
 	dispatcher := ext.NewDispatcher(&ext.DispatcherOpts{
-		// If an error is returned by a handler, log it and continue going.
+		// If a handler returns an error, log it and continue going.
 		Error: func(b *gotgbot.Bot, ctx *ext.Context, err error) ext.DispatcherAction {
 			log.Println("an error occurred while handling update:", err.Error())
 			return ext.DispatcherActionNoop
@@ -61,6 +61,8 @@ func main() {
 	dispatcher.AddHandler(handlers.NewCommand("start", start))
 
 	// Actual commands
+	dispatcher.AddHandler(handlers.NewCommand("help", help))
+	dispatcher.AddHandler(handlers.NewCommand("h", help))
 	dispatcher.AddHandler(handlers.NewCommand("echo", echo))
 	dispatcher.AddHandler(handlers.NewCommand("ip-address", apiIpLookup))
 	dispatcher.AddHandler(handlers.NewCommand("mensa", mensa))
@@ -92,7 +94,7 @@ func main() {
 
 func version(b *gotgbot.Bot, ctx *ext.Context) error {
 	// TODO: Change for every commit
-	_, err := ctx.EffectiveMessage.Reply(b, "Currently on Version v1.0.3", nil)
+	_, err := ctx.EffectiveMessage.Reply(b, "Currently on Version v1.0.5", nil)
 	if err != nil {
 		return fmt.Errorf("failed to send message: %w", err)
 	}
