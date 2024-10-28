@@ -63,6 +63,7 @@ func main() {
 	// Actual commands
 	dispatcher.AddHandler(handlers.NewCommand("echo", echo))
 	dispatcher.AddHandler(handlers.NewCommand("ip-address", apiIpLookup))
+	dispatcher.AddHandler(handlers.NewCommand("mensa", mensa))
 
 	// Debugging and utility commands
 	dispatcher.AddHandler(handlers.NewCommand("ping", ping))
