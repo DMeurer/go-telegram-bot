@@ -292,7 +292,7 @@ func mensa(b *gotgbot.Bot, ctx *ext.Context) error {
 	var days []string
 
 	if len(ctx.Args()) == 1 {
-		days = append(days, time.Wednesday.String())
+		days = append(days, time.Now().Weekday().String())
 	} else {
 
 		if tools.StringInSlice("-mon", ctx.Args()) {
