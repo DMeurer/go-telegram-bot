@@ -99,44 +99,45 @@ func LoadMeals() Meals {
 	allMeals := Meals{}
 
 	c := colly.NewCollector()
+	mealSelector := ".col-span-1.bg-lighter-cyan.py-20px.px-15px.flex.flex-col"
 	// Monday
 	// OnHTML is called for each element found with the specified selector
-	// in this case, the selector is a div with the id "tab-mon" and a child div with the class "col-span-1"
-	c.OnHTML("div#tab-mon div.col-span-1", func(e *colly.HTMLElement) {
-		// get text
-		text := cleanText(e.Text)
+	// in this case, the selector is a div with the id "tab-mon" and a child element matching the meal selector
+	c.OnHTML("div#tab-mon "+mealSelector, func(e *colly.HTMLElement) {
+		// get text from the small element
+		text := cleanText(e.ChildText("small.extra-text.mb-15px"))
 		// parse text into meal
 		myMeal := parseMeal(text)
 		//add meal to corresponding day
 		allMeals.Monday = append(allMeals.Monday, myMeal)
 	})
 	// Tuesday
-	c.OnHTML("div#tab-tue div.col-span-1", func(e *colly.HTMLElement) {
-		text := cleanText(e.Text)
+	c.OnHTML("div#tab-tue "+mealSelector, func(e *colly.HTMLElement) {
+		text := cleanText(e.ChildText("small.extra-text.mb-15px"))
 		myMeal := parseMeal(text)
 		allMeals.Tuesday = append(allMeals.Tuesday, myMeal)
 	})
 	// Wednesday
-	c.OnHTML("div#tab-wed div.col-span-1", func(e *colly.HTMLElement) {
-		text := cleanText(e.Text)
+	c.OnHTML("div#tab-wed "+mealSelector, func(e *colly.HTMLElement) {
+		text := cleanText(e.ChildText("small.extra-text.mb-15px"))
 		myMeal := parseMeal(text)
 		allMeals.Wednesday = append(allMeals.Wednesday, myMeal)
 	})
 	// Thursday
-	c.OnHTML("div#tab-thu div.col-span-1", func(e *colly.HTMLElement) {
-		text := cleanText(e.Text)
+	c.OnHTML("div#tab-thu "+mealSelector, func(e *colly.HTMLElement) {
+		text := cleanText(e.ChildText("small.extra-text.mb-15px"))
 		myMeal := parseMeal(text)
 		allMeals.Thursday = append(allMeals.Thursday, myMeal)
 	})
 	// Friday
-	c.OnHTML("div#tab-fri div.col-span-1", func(e *colly.HTMLElement) {
-		text := cleanText(e.Text)
+	c.OnHTML("div#tab-fri "+mealSelector, func(e *colly.HTMLElement) {
+		text := cleanText(e.ChildText("small.extra-text.mb-15px"))
 		myMeal := parseMeal(text)
 		allMeals.Friday = append(allMeals.Friday, myMeal)
 	})
 	// Saturday
-	c.OnHTML("div#tab-sat div.col-span-1", func(e *colly.HTMLElement) {
-		text := cleanText(e.Text)
+	c.OnHTML("div#tab-sat "+mealSelector, func(e *colly.HTMLElement) {
+		text := cleanText(e.ChildText("small.extra-text.mb-15px"))
 		myMeal := parseMeal(text)
 		allMeals.Saturday = append(allMeals.Saturday, myMeal)
 	})
